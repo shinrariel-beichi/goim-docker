@@ -12,7 +12,7 @@ RUN yum update -y && \
     yum install -y bash sudo psmisc git go wget java-1.8.0-openjdk && \
     yum clean all && \
     cd /root/src && \
-    git clone https://github.com/Terry-Mao/goim.git && \
+    git clone -b test https://github.com/zhouweitong3/goim.git && \
     cd /root/soft && \
     wget http://www-us.apache.org/dist/kafka/1.0.0/kafka_$kafka_ver-1.0.0.tgz && \
     tar -xzf kafka_$kafka_ver-1.0.0.tgz && \

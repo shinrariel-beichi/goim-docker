@@ -1,18 +1,16 @@
+function start() {
+    var ip_in = document.getElementById("ip");
+    var port_in = document.getElementById("port");
+    window.ip = ip_in.value;
+    window.port = port_in.value;
+    console.log("Server is:" + window.ip + ":" + window.port);
+    link(window.ip, window.port);
+    return true;
+}
 window.message = [];
 
 function Client() {
 
-}
-Client.prototype.send_data = function(name, msg_body) {
-    window.ws.send(JSON.stringify({
-        'ver': 1,
-        'op': 4,
-        'seq': 1,
-        'body': {
-            "name": name,
-            "msg_body": msg_body
-        }
-    }));
 }
 Client.prototype.createConnect = function(max, delay, server, port) {
     var self = this;
@@ -25,14 +23,14 @@ Client.prototype.createConnect = function(max, delay, server, port) {
     var heartbeatInterval;
 
     function connect(server, port) {
-        window.ws = new WebSocket('ws://' + server + ':' + port + '/sub');
+        var ws = new WebSocket('ws://' + server + ':' + port + '/sub');
         var auth = false;
 
-        window.ws.onopen = function() {
+        ws.onopen = function() {
             getAuth();
         }
 
-        window.ws.onmessage = function(evt) {
+        ws.onmessage = function(evt) {
             var receives = JSON.parse(evt.data)
             for (var i = 0; i < receives.length; i++) {
                 var data = receives[i];
@@ -53,24 +51,22 @@ Client.prototype.createConnect = function(max, delay, server, port) {
             }
         }
 
-        window.ws.onclose = function() {
+        ws.onclose = function() {
             if (heartbeatInterval) clearInterval(heartbeatInterval);
             setTimeout(reConnect, delay);
         }
 
         function heartbeat() {
-            if ((window.ip == server_temp) && (window.port == port_temp))
-                window.ws.send(JSON.stringify({
-                    'ver': 1,
-                    'op': 2,
-                    'seq': 2,
-                    'body': {}
-                }));
-            else return false;
+            ws.send(JSON.stringify({
+                'ver': 1,
+                'op': 2,
+                'seq': 2,
+                'body': {}
+            }));
         }
 
         function getAuth() {
-            window.ws.send(JSON.stringify({
+            ws.send(JSON.stringify({
                 'ver': 1,
                 'op': 7,
                 'seq': 1,
@@ -88,21 +84,9 @@ Client.prototype.createConnect = function(max, delay, server, port) {
     }
 }
 
-function start() {
-    var ip_in = document.getElementById("ip");
-    var port_in = document.getElementById("port");
-    window.ip = ip_in.value;
-    window.port = port_in.value;
-    console.log("Server is:" + window.ip + ":" + window.port);
-    window.client = new Client();
+function link(ip, port) {
+    var instance = new Client();
     var MAX_CONNECT_TIME = 10;
     var DELAY = 15000;
-    window.client.createConnect(MAX_CONNECT_TIME, DELAY, window.ip, window.port);
-    return true;
-}
-
-function msg_send() {
-    var user_name = document.getElementById("name_in");
-    var user_msg = document.getElementById("msg_in");
-    window.client.send_data(user_name.value, user_msg.value);
+    instance.createConnect(MAX_CONNECT_TIME, DELAY, window.ip, window.port);
 }

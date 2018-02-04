@@ -6,9 +6,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="vue.js"></script>
     <script type="text/javascript" src="wsconnect.js"></script>
+    <script>
+        function msg_send() {
+            var msgip = document.getElementById("ip").value;
+            var msport = document.getElementById("sendport").value;
+            var msname = document.getElementById("name_in").value;
+            var msbody = document.getElementById("msg_in").value;
+            $.post("http://" + msgip + ":" + msport + "/1/push/all", JSON.stringify({
+                "name": msname,
+                "msg_body": msbody
+            }), "json")
 
+        }
+    </script>
 </head>
 
 <body>
@@ -21,10 +34,11 @@
         <input type="text" id="port" value="8090">
         <button type="button" onclick="start()">Connect</button>
     </form><br />
-    <b>Push command sample:</b><br /> $ curl -d "{\"name\":\"test\",\"msgbody\":\"1\"}" http://127.0.0.1:7172/1/push/all <br />
+    <b>Push command sample:</b><br /> $ curl -d "{\"name\":\"test\",\"msg_body\":\"1\"}" http://127.0.0.1:7172/1/push/all <br />
     <h3>Message Post:</h3>
     <form>
-        Name:<input type="text" id="name_in" value="test"><br /> Message:
+        Port:<input type="text" id="sendport" value="7172"><br /> Name:
+        <input type="text" id="name_in" value="test"><br /> Message:
         <input type="text" id="msg_in" value="1">
         <button type="button" id="send" onclick="msg_send()">Send</button>
     </form>

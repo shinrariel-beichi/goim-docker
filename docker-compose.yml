@@ -1,5 +1,5 @@
-goim:
-    image: zhouweitong/goim-docker:goim
+goim-test:
+    image: daocloud.io/zhouweitong3/goim-docker:cors-test
     ports:
       - 1999:1999
       - 2181:2181
@@ -18,6 +18,6 @@ goim:
       - 8090:8090
       - 8092:8092
     volumes:
-      - goim_config:/root/config
-      - goim_logs:/root/logs
-      - goim_example:/root/soft/example
+      - goim_test_config:/root/config
+      - goim_test_logs:/root/logs
+      - goim_test_example:/root/soft/example
